@@ -1,12 +1,20 @@
 use crate::types::{Address, BlockHash, Bytes20, Bytes32, Uint256};
 
+// stack virtual machine
+// stack depth = 16 items, item size = 32 bytes
+
+// address -> push32(address)
+
+//
+
 extern {
     fn _evm_stop();
-    fn _evm_keccak256(offset: i32, size: u32) -> i32;
-    fn _evm_address() -> i32;
-    fn _evm_balance(address: i32) -> i32;
-    fn _evm_origin() -> i32;
-    fn _evm_caller() -> i32;
+    fn _evm_keccak256(offset: *const u8, size: u32, dest: *mut u8);
+    fn _evm_address(dest: *mut u8);
+    fn _evm_balance(address: *const u8, dest: *mut u8);
+    fn _evm_origin(dest: *mut u8);
+    fn _evm_caller(dest: *mut u8);
+
     // fn _evm_call_value() -> Uint256;
     // fn _evm_call_data_load(offset: i32) -> Bytes32;
     // fn _evm_call_data_size() -> u32;
@@ -52,7 +60,7 @@ pub fn evm_stop() {
     }
 }
 
-pub fn evm_keccak256(offset: i32, size: u32) -> Bytes32 {
+pub fn evm_keccak256(offset: *const u8, size: u32) -> Bytes32 {
     let ptr = unsafe {
         _evm_keccak256(offset, size)
     };
@@ -60,15 +68,16 @@ pub fn evm_keccak256(offset: i32, size: u32) -> Bytes32 {
 }
 
 pub fn evm_address() -> Address {
-    let ptr = unsafe {
-        _evm_address()
+    let mut res: Address = [0; 20];
+    unsafe {
+        _evm_address(res.as_mut_ptr())
     };
-    ptr_to_slice(ptr)
+    res
 }
 
 pub fn evm_balance(address: Address) -> Uint256 {
     let ptr = unsafe {
-        _evm_balance(address.as_ptr() as i32)
+        _evm_balance(address.as_ptr())
     };
     ptr_to_slice(ptr)
 }
@@ -309,10 +318,10 @@ pub fn evm_caller() -> Address {
 //     }
 // }
 
-fn ptr_to_slice<const N: usize>(ptr: i32) -> [u8; N] {
+fn ptr_to_slice<const N: usize>(ptr: *const u8) -> [u8; N] {
     let mut res: [u8; N] = [0u8; N];
     let slice = unsafe {
-        std::slice::from_raw_parts(ptr as *const u8, N)
+        std::slice::from_raw_parts(ptr, N)
     };
     res.clone_from_slice(slice);
     return res[0..N].try_into().unwrap();
