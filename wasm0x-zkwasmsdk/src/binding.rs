@@ -1,4 +1,4 @@
-use crate::types::{Address, BlockHash, Bytes20, Bytes32, Uint256};
+use crate::types::{Address};
 
 // stack virtual machine
 // stack depth = 16 items, item size = 32 bytes
@@ -25,8 +25,10 @@ extern {
     // fn _evm_ext_code_size(address: Address) -> u32;
     // fn _evm_ext_code_copy(address: Address, mem_offset: i32, code_offset: i32, length: u32);
     // fn _evm_ext_code_hash(address: Address) -> Bytes32;
-    // fn _evm_return_data_size() -> u32;
-    // fn _evm_return_data_copy(mem_offset: i32, data_offset: i32, length: u32);
+
+    fn _evm_return_data_size() -> u32;
+    fn _evm_return_data_copy(mem_offset: i32, data_offset: i32, length: u32);
+
     // fn _evm_block_hash(num: u64) -> BlockHash;
     // fn _evm_coinbase() -> Address;
     // fn _evm_timestamp() -> u64;
@@ -60,12 +62,12 @@ pub fn evm_stop() {
     }
 }
 
-pub fn evm_keccak256(offset: *const u8, size: u32) -> Bytes32 {
-    let ptr = unsafe {
-        _evm_keccak256(offset, size)
-    };
-    ptr_to_slice(ptr)
-}
+// pub fn evm_keccak256(offset: *const u8, size: u32) -> Bytes32 {
+//     let ptr = unsafe {
+//         _evm_keccak256(offset, size)
+//     };
+//     ptr_to_slice(ptr)
+// }
 
 pub fn evm_address() -> Address {
     let mut res: Address = [0; 20];
@@ -75,26 +77,26 @@ pub fn evm_address() -> Address {
     res
 }
 
-pub fn evm_balance(address: Address) -> Uint256 {
-    let ptr = unsafe {
-        _evm_balance(address.as_ptr())
-    };
-    ptr_to_slice(ptr)
-}
-
-pub fn evm_origin() -> Address {
-    let ptr = unsafe {
-        _evm_origin()
-    };
-    ptr_to_slice(ptr)
-}
-
-pub fn evm_caller() -> Address {
-    let ptr = unsafe {
-        _evm_caller()
-    };
-    ptr_to_slice(ptr)
-}
+// pub fn evm_balance(address: Address) -> Uint256 {
+//     let ptr = unsafe {
+//         _evm_balance(address.as_ptr())
+//     };
+//     ptr_to_slice(ptr)
+// }
+//
+// pub fn evm_origin() -> Address {
+//     let ptr = unsafe {
+//         _evm_origin()
+//     };
+//     ptr_to_slice(ptr)
+// }
+//
+// pub fn evm_caller() -> Address {
+//     let ptr = unsafe {
+//         _evm_caller()
+//     };
+//     ptr_to_slice(ptr)
+// }
 
 // pub fn evm_call_value() -> Uint256 {
 //     unsafe {
@@ -317,12 +319,3 @@ pub fn evm_caller() -> Address {
 //         _evm_self_destruct(beneficiary)
 //     }
 // }
-
-fn ptr_to_slice<const N: usize>(ptr: *const u8) -> [u8; N] {
-    let mut res: [u8; N] = [0u8; N];
-    let slice = unsafe {
-        std::slice::from_raw_parts(ptr, N)
-    };
-    res.clone_from_slice(slice);
-    return res[0..N].try_into().unwrap();
-}

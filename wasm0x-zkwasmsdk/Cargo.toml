@@ -1,10 +1,10 @@
 [package]
-name = "hello"
+name = "wasm0x-zkwasmsdk"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-lazy_static = "1.4.0"
+
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
