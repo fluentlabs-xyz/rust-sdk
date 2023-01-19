@@ -1,0 +1,12 @@
+[package]
+name = "deploy"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hex = "0.4.3"
+hex-literal = "0.3.4"
+wasm0x-zkwasmsdk = { path = "../.." }
+
+[lib]
+crate-type = ["cdylib"]

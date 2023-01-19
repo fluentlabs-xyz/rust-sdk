@@ -56,6 +56,7 @@ extern {
     // fn _evm_self_destruct(beneficiary: Address);
 }
 
+#[inline(always)]
 pub fn evm_stop() {
     unsafe {
         _evm_stop()
@@ -69,6 +70,7 @@ pub fn evm_stop() {
 //     ptr_to_slice(ptr)
 // }
 
+#[inline(always)]
 pub fn evm_address() -> Address {
     let mut res: Address = [0; 20];
     unsafe {
@@ -157,19 +159,21 @@ pub fn evm_address() -> Address {
 //         _evm_ext_code_hash(address)
 //     }
 // }
-//
-// pub fn evm_return_data_size() -> u32 {
-//     unsafe {
-//         _evm_return_data_size()
-//     }
-// }
-//
-// pub fn evm_return_data_copy(mem_offset: i32, data_offset: i32, length: u32) {
-//     unsafe {
-//         _evm_return_data_copy(mem_offset, data_offset, length)
-//     }
-// }
-//
+
+#[inline(always)]
+pub fn evm_return_data_size() -> u32 {
+    unsafe {
+        _evm_return_data_size()
+    }
+}
+
+#[inline(always)]
+pub fn evm_return_data_copy(mem_offset: *const u8, data_offset: i32, length: u32) {
+    unsafe {
+        _evm_return_data_copy(mem_offset as i32, data_offset, length)
+    }
+}
+
 // pub fn evm_block_hash(num: u64) -> BlockHash {
 //     unsafe {
 //         _evm_block_hash(num)
