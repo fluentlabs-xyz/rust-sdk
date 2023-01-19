@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-wasm0x-zkwasmsdk = { path = "../../wasm0x-zkwasmsdk" }
+wasm0x-zkwasmsdk = { path = "../.." }
 
 [lib]
 crate-type = ["cdylib"]
