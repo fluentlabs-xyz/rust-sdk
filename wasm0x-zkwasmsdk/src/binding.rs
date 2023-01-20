@@ -1,3 +1,5 @@
+use std::ops::Add;
+use crate::{Balance};
 use crate::types::Address;
 use crate::types::Uint256;
 
@@ -32,7 +34,6 @@ extern {
     // fn _evm_random() -> Bytes32;
     // fn _evm_gas_limit() -> u64;
     // fn _evm_chain_id() -> Uint256;
-    // fn _evm_self_balance() -> Uint256;
     // fn _evm_base_fee() -> u64;
     // fn _evm_storage_load(slot: Bytes32) -> Bytes32;
     // fn _evm_storage_store(slot: Bytes32, value: Bytes32);
@@ -81,26 +82,31 @@ pub fn evm_address() -> Address {
     res
 }
 
-// pub fn evm_balance(address: Address) -> Uint256 {
-//     let ptr = unsafe {
-//         _evm_balance(address.as_ptr())
-//     };
-//     ptr_to_slice(ptr)
-// }
-//
-// pub fn evm_origin() -> Address {
-//     let ptr = unsafe {
-//         _evm_origin()
-//     };
-//     ptr_to_slice(ptr)
-// }
-//
-// pub fn evm_caller() -> Address {
-//     let ptr = unsafe {
-//         _evm_caller()
-//     };
-//     ptr_to_slice(ptr)
-// }
+#[inline(always)]
+pub fn evm_balance(address: &Address) -> Balance {
+    let mut res: Balance = [0; 32];
+    unsafe {
+        _evm_balance(address.as_ptr(), res.as_mut_ptr())
+    };
+    res
+}
+
+#[inline(always)]
+pub fn evm_origin() -> Address {
+    let mut res: Address = [0; 20];
+    unsafe {
+        _evm_origin(res.as_mut_ptr())
+    };
+    res
+}
+
+pub fn evm_caller() -> Address {
+    let mut res: Address = [0; 20];
+    unsafe {
+        _evm_caller(res.as_mut_ptr())
+    };
+    res
+}
 
 #[inline(always)]
 pub fn evm_call_value() -> Uint256 {
@@ -110,6 +116,7 @@ pub fn evm_call_value() -> Uint256 {
     }
     res
 }
+
 //
 // pub fn evm_call_data_load(offset: i32) -> Bytes32 {
 //     unsafe {
@@ -198,6 +205,7 @@ pub fn evm_timestamp() -> i64 {
         _evm_timestamp()
     }
 }
+
 //
 // pub fn evm_number() -> u64 {
 //     unsafe {
@@ -229,11 +237,6 @@ pub fn evm_timestamp() -> i64 {
 //     }
 // }
 //
-// pub fn evm_self_balance() -> Uint256 {
-//     unsafe {
-//         _evm_self_balance()
-//     }
-// }
 //
 // pub fn evm_base_fee() -> u64 {
 //     unsafe {
