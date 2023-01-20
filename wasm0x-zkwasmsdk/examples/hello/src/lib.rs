@@ -11,11 +11,7 @@ fn test_address() -> i32 {
 
 fn test_call_value() -> i32 {
     let val = evm_call_value();
-    let mut sum = 0;
-    for b in val {
-        sum += b as i32;
-    }
-    sum
+    val.bit_length() as i32
 }
 
 fn test_timestamp() -> i32 {

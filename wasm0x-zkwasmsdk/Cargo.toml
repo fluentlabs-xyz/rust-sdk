@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+fixed = "1.21.0"
+fixed-bigint = "0.1.9"
+num-bigint = "0.4.3"
 
 
 [lib]
