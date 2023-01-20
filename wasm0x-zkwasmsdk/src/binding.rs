@@ -1,15 +1,9 @@
 use crate::types::Address;
 use crate::types::Uint256;
 
-// stack virtual machine
-// stack depth = 16 items, item size = 32 bytes
-
-// address -> push32(address)
-
-//
-
 extern {
     fn _evm_stop();
+    fn _evm_return(offset: *const u8, size: u32);
     fn _evm_keccak256(offset: *const u8, size: u32, dest: *mut u8);
     fn _evm_address(dest: *mut u8);
     fn _evm_balance(address: *const u8, dest: *mut u8);
@@ -61,6 +55,13 @@ extern {
 pub fn evm_stop() {
     unsafe {
         _evm_stop()
+    }
+}
+
+#[inline(always)]
+pub fn evm_return(offset: *const u8, size: u32) {
+    unsafe {
+        _evm_return(offset, size)
     }
 }
 
