@@ -8,3 +8,7 @@ wasm0x-zkwasmsdk = { path = "../.." }
 
 [lib]
 crate-type = ["cdylib"]
+# uncomment desired example
+#path = "src/lib_evm_address"
+#path = "src/lib_evm_call_value.rs"
+path = "src/lib_evm_timestamp.rs"

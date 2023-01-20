@@ -1,4 +1,6 @@
-use crate::types::{Address};
+use crate::types::Address;
+use crate::types::Uint64;
+use crate::types::Uint256;
 
 // stack virtual machine
 // stack depth = 16 items, item size = 32 bytes
@@ -15,7 +17,7 @@ extern {
     fn _evm_origin(dest: *mut u8);
     fn _evm_caller(dest: *mut u8);
 
-    // fn _evm_call_value() -> Uint256;
+    fn _evm_call_value() -> Uint256;
     // fn _evm_call_data_load(offset: i32) -> Bytes32;
     // fn _evm_call_data_size() -> u32;
     // fn _evm_call_data_copy(mem_offset: i32, data_offset: i32, length: u32);
@@ -31,7 +33,7 @@ extern {
 
     // fn _evm_block_hash(num: u64) -> BlockHash;
     // fn _evm_coinbase() -> Address;
-    // fn _evm_timestamp() -> u64;
+    fn _evm_timestamp() -> Uint64;
     // fn _evm_number() -> u64;
     // fn _evm_difficulty() -> Uint256;
     // fn _evm_random() -> Bytes32;
@@ -100,11 +102,12 @@ pub fn evm_address() -> Address {
 //     ptr_to_slice(ptr)
 // }
 
-// pub fn evm_call_value() -> Uint256 {
-//     unsafe {
-//         _evm_call_value()
-//     }
-// }
+#[inline(always)]
+pub fn evm_call_value() -> Uint256 {
+    unsafe {
+        _evm_call_value()
+    }
+}
 //
 // pub fn evm_call_data_load(offset: i32) -> Bytes32 {
 //     unsafe {
@@ -186,11 +189,13 @@ pub fn evm_return_data_copy(mem_offset: *const u8, data_offset: i32, length: u32
 //     }
 // }
 //
-// pub fn evm_timestamp() -> u64 {
-//     unsafe {
-//         _evm_timestamp()
-//     }
-// }
+
+#[inline(always)]
+pub fn evm_timestamp() -> Uint64 {
+    unsafe {
+        _evm_timestamp()
+    }
+}
 //
 // pub fn evm_number() -> u64 {
 //     unsafe {
