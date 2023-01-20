@@ -1,7 +1,4 @@
-use std::ops::Add;
-use crate::{Balance};
-use crate::types::Address;
-use crate::types::Uint256;
+use crate::types::*;
 
 extern {
     fn _evm_stop();
@@ -76,6 +73,7 @@ pub fn evm_return(offset: *const u8, size: u32) {
 #[inline(always)]
 pub fn evm_address() -> Address {
     let mut res: Address = [0; 20];
+
     unsafe {
         _evm_address(res.as_mut_ptr())
     };
@@ -110,14 +108,13 @@ pub fn evm_caller() -> Address {
 
 #[inline(always)]
 pub fn evm_call_value() -> Uint256 {
-    let mut res: Uint256 = [0; 32];
+    let mut bytes: [u8; 32] = [0; 32];
     unsafe {
-        _evm_call_value(res.as_mut_ptr())
+        _evm_call_value(bytes.as_mut_ptr())
     }
-    res
+    Uint256::from_le_bytes(&bytes)
 }
 
-//
 // pub fn evm_call_data_load(offset: i32) -> Bytes32 {
 //     unsafe {
 //         _evm_call_data_load(offset)
