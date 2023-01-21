@@ -11,9 +11,9 @@ extern {
     fn _evm_call_value(dest: *mut u8);
     fn _evm_call_data_load(offset: u32, dest: *mut u8);
     fn _evm_call_data_size(dest: *mut u32);
-    fn _evm_call_data_copy(mem_offset: *const u8, data_offset: *const u8, length: u32);
-    fn _evm_code_size(dest: *mut u8);
-    fn _evm_code_copy(mem_offset: *const u8, code_offset: *const u8, length: u32);
+    fn _evm_call_data_copy(mem_offset: *mut u8, data_offset: *const u8, length: u32);
+    fn _evm_code_size(dest: *mut u32);
+    fn _evm_code_copy(mem_offset: *mut u8, code_offset: *const u8, length: u32);
     fn _evm_gas_price(dest: *mut u8);
     fn _evm_ext_code_size(address: *const u8, dest: *mut u32);
     fn _evm_ext_code_copy(address: *const u8, mem_offset: *const u8, code_offset: u32, length: u32);
@@ -25,10 +25,10 @@ extern {
     fn _evm_timestamp(dest: *mut i64);
     fn _evm_number(dest: *mut u64);
     fn _evm_difficulty(dest: *mut u8);
-    fn _evm_random(dest: *mut u8);
     fn _evm_gas_limit(dest: *mut u64);
     fn _evm_chain_id(dest: *mut u8);
     fn _evm_base_fee(dest: *mut u8);
+
     // fn _evm_storage_load(slot: Bytes32) -> Bytes32;
     // fn _evm_storage_store(slot: Bytes32, value: Bytes32);
     // fn _evm_log0(data_offset: i32, data_length: u32);
@@ -232,15 +232,6 @@ pub fn evm_difficulty() -> Uint256 {
         _evm_difficulty(bytes.as_mut_ptr())
     }
     Uint256::from_le_bytes(&bytes)
-}
-
-#[inline(always)]
-pub fn evm_random() -> Bytes32 {
-    let mut res: Bytes32 = [0; 32];
-    unsafe {
-        _evm_random(res.as_mut_ptr())
-    }
-    res
 }
 
 #[inline(always)]
