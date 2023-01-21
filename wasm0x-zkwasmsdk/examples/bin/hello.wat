@@ -1,15 +1,14 @@
 (module
   (type (;0;) (func (param i32)))
-  (type (;1;) (func (result i64)))
-  (type (;2;) (func (param i32 i32)))
-  (type (;3;) (func (param i32) (result i32)))
+  (type (;1;) (func (param i32 i32)))
+  (type (;2;) (func (param i32) (result i32)))
   (import "env" "_evm_address" (func $_evm_address (type 0)))
   (import "env" "_evm_call_value" (func $_evm_call_value (type 0)))
-  (import "env" "_evm_timestamp" (func $_evm_timestamp (type 1)))
-  (import "env" "_evm_balance" (func $_evm_balance (type 2)))
+  (import "env" "_evm_timestamp" (func $_evm_timestamp (type 0)))
+  (import "env" "_evm_balance" (func $_evm_balance (type 1)))
   (import "env" "_evm_origin" (func $_evm_origin (type 0)))
   (import "env" "_evm_caller" (func $_evm_caller (type 0)))
-  (func $main (type 3) (param i32) (result i32)
+  (func $main (type 2) (param i32) (result i32)
     (local i32 i32 i32 i32 i32)
     global.get $__stack_pointer
     i32.const 64
@@ -175,9 +174,16 @@
       i32.and
       i32.eqz
       br_if 0 (;@1;)
-      local.get 2
+      local.get 1
+      i64.const 0
+      i64.store offset=32
+      local.get 1
+      i32.const 32
+      i32.add
       call $_evm_timestamp
-      i32.wrap_i64
+      local.get 2
+      local.get 1
+      i32.load offset=32
       i32.add
       local.set 2
     end
@@ -495,7 +501,7 @@
     i32.add
     global.set $__stack_pointer
     local.get 2)
-  (func $_ZN12fixed_bigint9fixeduint22FixedUInt$LT$T$C$_$GT$10bit_length17he8507830c3da91b7E (type 3) (param i32) (result i32)
+  (func $_ZN12fixed_bigint9fixeduint22FixedUInt$LT$T$C$_$GT$10bit_length17he8507830c3da91b7E (type 2) (param i32) (result i32)
     (local i32 i32 i32)
     local.get 0
     i32.load8_u offset=31
