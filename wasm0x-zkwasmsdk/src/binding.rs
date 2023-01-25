@@ -28,14 +28,13 @@ extern {
     fn _evm_gas_limit(dest: *mut u64);
     fn _evm_chain_id(dest: *mut u8);
     fn _evm_base_fee(dest: *mut u8);
-
-    // fn _evm_storage_load(slot: Bytes32) -> Bytes32;
-    // fn _evm_storage_store(slot: Bytes32, value: Bytes32);
-    // fn _evm_log0(data_offset: i32, data_length: u32);
-    // fn _evm_log1(data_offset: i32, data_length: u32, topics: [Bytes32; 1]);
-    // fn _evm_log2(data_offset: i32, data_length: u32, topics: [Bytes32; 2]);
-    // fn _evm_log3(data_offset: i32, data_length: u32, topics: [Bytes32; 3]);
-    // fn _evm_log4(data_offset: i32, data_length: u32, topics: [Bytes32; 4]);
+    fn _evm_storage_load(slot: *const u8, dest: *mut u8);
+    fn _evm_storage_store(slot: *const u8, value: *const u8);
+    fn _evm_log0(data_offset: i32, data_length: u32);
+    fn _evm_log1(data_offset: i32, data_length: u32, topic0: *const u8);
+    fn _evm_log2(data_offset: i32, data_length: u32, topic0: *const u8, topic1: *const u8);
+    fn _evm_log3(data_offset: i32, data_length: u32, topic0: *const u8, topic1: *const u8, topic2: *const u8);
+    fn _evm_log4(data_offset: i32, data_length: u32, topic0: *const u8, topic1: *const u8, topic2: *const u8, topic3: *const u8);
     // fn _evm_create(value: Uint256, bytecode_offset: i32, bytecode_length: u32);
     // fn _evm_call(gas: u64, address: Address, value: Uint256, input_offset: i32, input_length: u32, return_offset: i32, return_length: u32) -> bool;
     // fn _evm_call_code(gas: u64, address: Address, value: Uint256, input_offset: i32, input_length: u32, return_offset: i32, return_length: u32) -> bool;
@@ -261,30 +260,36 @@ pub fn evm_base_fee() -> Uint256 {
     Uint256::from_le_bytes(&bytes)
 }
 
-// pub fn evm_storage_load(slot: Bytes32) -> Bytes32 {
-//     unsafe {
-//         _evm_storage_load(slot)
-//     }
-// }
-//
-// pub fn evm_storage_store(slot: Bytes32, value: Bytes32) {
-//     unsafe {
-//         _evm_storage_store(slot, value)
-//     }
-// }
-//
-// pub fn evm_log0(data_offset: i32, data_length: u32) {
-//     unsafe {
-//         _evm_log0(data_offset, data_length)
-//     }
-// }
-//
+#[inline(always)]
+pub fn evm_storage_load(slot: Bytes32) -> Bytes32 {
+    let mut bytes: Bytes32 = [0; 32];
+    unsafe {
+        _evm_storage_load(slot.as_ptr(), bytes.as_mut_ptr())
+    }
+    bytes
+}
+
+#[inline(always)]
+pub fn evm_storage_store(slot: Bytes32, value: Bytes32) {
+    unsafe {
+        _evm_storage_store(slot.as_ptr(), value.as_ptr())
+    }
+}
+
+#[inline(always)]
+pub fn evm_log0(data_offset: i32, data_length: u32) {
+    unsafe {
+        _evm_log0(data_offset, data_length)
+    }
+}
+
+// #[inline(always)]
 // pub fn evm_log1(data_offset: i32, data_length: u32, topics: [Bytes32; 1]) {
 //     unsafe {
 //         _evm_log1(data_offset, data_length, topics)
 //     }
 // }
-//
+
 // pub fn evm_log2(data_offset: i32, data_length: u32, topics: [Bytes32; 2]) {
 //     unsafe {
 //         _evm_log2(data_offset, data_length, topics)
