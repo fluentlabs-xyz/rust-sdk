@@ -35,14 +35,14 @@ extern {
     fn _evm_log2(data_offset: i32, data_length: u32, topic0: *const u8, topic1: *const u8);
     fn _evm_log3(data_offset: i32, data_length: u32, topic0: *const u8, topic1: *const u8, topic2: *const u8);
     fn _evm_log4(data_offset: i32, data_length: u32, topic0: *const u8, topic1: *const u8, topic2: *const u8, topic3: *const u8);
-    // fn _evm_create(value: Uint256, bytecode_offset: i32, bytecode_length: u32);
-    // fn _evm_call(gas: u64, address: Address, value: Uint256, input_offset: i32, input_length: u32, return_offset: i32, return_length: u32) -> bool;
-    // fn _evm_call_code(gas: u64, address: Address, value: Uint256, input_offset: i32, input_length: u32, return_offset: i32, return_length: u32) -> bool;
-    // fn _evm_delegate_call(gas: u64, address: Address, value: Uint256, input_offset: i32, input_length: u32, return_offset: i32, return_length: u32) -> bool;
-    // fn _evm_create2(value: Uint256, bytecode_offset: i32, bytecode_length: u32, salt: Bytes32) -> Address;
-    // fn _evm_static_call(gas: u64, address: Address, value: Uint256, input_offset: i32, input_length: u32, return_offset: i32, return_length: u32) -> bool;
+    fn _evm_create(value: *const u8, bytecode_offset: *const u8, bytecode_length: u32);
+    fn _evm_call(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
+    fn _evm_call_code(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
+    fn _evm_delegate_call(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
+    fn _evm_create2(value: *const u8, bytecode_offset: *const u8, bytecode_length: u32, salt: *const u8, dest: *mut u8);
+    fn _evm_static_call(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
     fn _evm_revert(error_offset: *const u8, error_length: u32);
-    // fn _evm_self_destruct(beneficiary: Address);
+    fn _evm_self_destruct(beneficiary: *const u8);
 }
 
 #[inline(always)]
@@ -50,6 +50,7 @@ pub fn evm_stop() {
     unsafe {
         _evm_stop()
     }
+    unreachable!()
 }
 
 #[inline(always)]
@@ -57,6 +58,7 @@ pub fn evm_return(offset: *const u8, size: u32) {
     unsafe {
         _evm_return(offset, size)
     }
+    unreachable!()
 }
 
 #[inline(always)]
@@ -95,6 +97,7 @@ pub fn evm_origin() -> Address {
     res
 }
 
+#[inline(always)]
 pub fn evm_caller() -> Address {
     let mut res: Address = [0; 20];
     unsafe {
@@ -349,10 +352,13 @@ pub fn evm_revert(error_offset: *const u8, error_length: u32) {
     unsafe {
         _evm_revert(error_offset, error_length)
     }
+    unreachable!()
 }
 
-// pub fn evm_self_destruct(beneficiary: Address) {
-//     unsafe {
-//         _evm_self_destruct(beneficiary)
-//     }
-// }
+#[inline(always)]
+pub fn evm_self_destruct(beneficiary: Address) {
+    unsafe {
+        _evm_self_destruct(beneficiary.as_ptr())
+    }
+    unreachable!()
+}

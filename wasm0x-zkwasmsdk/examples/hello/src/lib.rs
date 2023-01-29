@@ -26,8 +26,9 @@ fn test_timestamp() -> i32 {
     return val as i32;
 }
 
-fn test_balance(address: &Address) -> i32 {
-    let val = evm_balance(address);
+fn test_balance() -> i32 {
+    let address: Address = [1; 20];
+    let val = evm_balance(&address);
     let mut sum = 0;
     for b in val {
         sum += b as i32;
@@ -66,8 +67,7 @@ pub extern "C" fn main(input: i32) -> i32 {
         res += test_timestamp();
     }
     if input & BALANCE__FUNCTION_FLAG != 0 {
-        let address: Address = [1; 20];
-        res += test_balance(&address);
+        res += test_balance();
     }
     if input & CALLER__FUNCTION_FLAG != 0 {
         res += test_caller();
