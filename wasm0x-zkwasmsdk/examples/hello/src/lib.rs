@@ -16,10 +16,10 @@ fn test_address() -> i32 {
     sum
 }
 
-fn test_call_value() -> i32 {
-    let val = evm_call_value();
-    val.bit_length() as i32
-}
+// fn test_call_value() -> i32 {
+//     let val = evm_call_value();
+//     val.bit_length() as i32
+// }
 
 fn test_timestamp() -> i32 {
     let val = evm_timestamp();
@@ -60,9 +60,9 @@ pub extern "C" fn main(input: i32) -> i32 {
     if input & ADDRESS__FUNCTION_FLAG != 0 {
         res += test_address();
     }
-    if input & CALLVALUE__FUNCTION_FLAG != 0 {
-        res += test_call_value();
-    }
+    // if input & CALLVALUE__FUNCTION_FLAG != 0 {
+    //     res += test_call_value();
+    // }
     if input & TIMESTAMP__FUNCTION_FLAG != 0 {
         res += test_timestamp();
     }

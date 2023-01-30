@@ -10,3 +10,8 @@ wasm0x-zkwasmsdk = { path = "../.." }
 
 [lib]
 crate-type = ["cdylib"]
+
+[profile.release]
+lto = true
+opt-level = 'z'
+strip = true

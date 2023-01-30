@@ -8,3 +8,8 @@ fixed-bigint = "0.1.9"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
+
+[profile.release]
+lto = true
+opt-level = 'z'
+strip = true

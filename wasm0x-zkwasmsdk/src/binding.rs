@@ -50,7 +50,6 @@ pub fn evm_stop() {
     unsafe {
         _evm_stop()
     }
-    unreachable!()
 }
 
 #[inline(always)]
@@ -58,7 +57,6 @@ pub fn evm_return(offset: *const u8, size: u32) {
     unsafe {
         _evm_return(offset, size)
     }
-    unreachable!()
 }
 
 #[inline(always)]
@@ -352,7 +350,6 @@ pub fn evm_revert(error_offset: *const u8, error_length: u32) {
     unsafe {
         _evm_revert(error_offset, error_length)
     }
-    unreachable!()
 }
 
 #[inline(always)]
@@ -360,5 +357,4 @@ pub fn evm_self_destruct(beneficiary: Address) {
     unsafe {
         _evm_self_destruct(beneficiary.as_ptr())
     }
-    unreachable!()
 }
