@@ -6,6 +6,7 @@ const TIMESTAMP__FUNCTION_FLAG: i32 = 1 << 2;
 const BALANCE__FUNCTION_FLAG: i32 = 1 << 3;
 const CALLER__FUNCTION_FLAG: i32 = 1 << 4;
 const ORIGIN__FUNCTION_FLAG: i32 = 1 << 5;
+const PANICING__FUNCTION_FLAG: i32 = 1 << 6;
 
 fn test_address() -> i32 {
     let val = evm_address();
@@ -16,10 +17,10 @@ fn test_address() -> i32 {
     sum
 }
 
-// fn test_call_value() -> i32 {
-//     let val = evm_call_value();
-//     val.bit_length() as i32
-// }
+fn test_call_value() -> i32 {
+    let val = evm_call_value();
+    val.bit_length() as i32
+}
 
 fn test_timestamp() -> i32 {
     let val = evm_timestamp();
@@ -54,15 +55,19 @@ fn test_origin() -> i32 {
     sum
 }
 
+fn test_panicing() -> i32 {
+    panic!("some panic message")
+}
+
 #[no_mangle]
 pub extern "C" fn main(input: i32) -> i32 {
     let mut res = 0;
     if input & ADDRESS__FUNCTION_FLAG != 0 {
         res += test_address();
     }
-    // if input & CALLVALUE__FUNCTION_FLAG != 0 {
-    //     res += test_call_value();
-    // }
+    if input & CALLVALUE__FUNCTION_FLAG != 0 {
+        res += test_call_value();
+    }
     if input & TIMESTAMP__FUNCTION_FLAG != 0 {
         res += test_timestamp();
     }
@@ -74,6 +79,9 @@ pub extern "C" fn main(input: i32) -> i32 {
     }
     if input & ORIGIN__FUNCTION_FLAG != 0 {
         res += test_origin();
+    }
+    if input & PANICING__FUNCTION_FLAG != 0 {
+        res += test_panicing();
     }
     res
 }

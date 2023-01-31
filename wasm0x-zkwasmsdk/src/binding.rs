@@ -262,7 +262,7 @@ pub fn evm_base_fee() -> Uint256 {
 }
 
 #[inline(always)]
-pub fn evm_storage_load(slot: Bytes32) -> Bytes32 {
+pub fn evm_storage_load(slot: &Bytes32) -> Bytes32 {
     let mut bytes: Bytes32 = [0; 32];
     unsafe {
         _evm_storage_load(slot.as_ptr(), bytes.as_mut_ptr())
@@ -271,7 +271,7 @@ pub fn evm_storage_load(slot: Bytes32) -> Bytes32 {
 }
 
 #[inline(always)]
-pub fn evm_storage_store(slot: Bytes32, value: Bytes32) {
+pub fn evm_storage_store(slot: &Bytes32, value: &Bytes32) {
     unsafe {
         _evm_storage_store(slot.as_ptr(), value.as_ptr())
     }
@@ -353,7 +353,7 @@ pub fn evm_revert(error_offset: *const u8, error_length: u32) {
 }
 
 #[inline(always)]
-pub fn evm_self_destruct(beneficiary: Address) {
+pub fn evm_self_destruct(beneficiary: &Address) {
     unsafe {
         _evm_self_destruct(beneficiary.as_ptr())
     }
