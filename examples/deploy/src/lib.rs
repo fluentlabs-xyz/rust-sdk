@@ -1,3 +1,5 @@
+#![no_std]
+
 use hex_literal::hex;
 use wasm0x_zkwasmsdk::{evm_return};
 

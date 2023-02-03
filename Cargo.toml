@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 fixed-bigint = "0.1.9"
+wee_alloc = "0.4.5"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

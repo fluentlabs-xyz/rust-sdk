@@ -1,3 +1,5 @@
+#![no_std]
+
 use wasm0x_zkwasmsdk::*;
 
 const ADDRESS__FUNCTION_FLAG: i32 = 1 << 0;
@@ -56,7 +58,8 @@ fn test_origin() -> i32 {
 }
 
 fn test_panicing() -> i32 {
-    panic!("some panic message")
+    // panic!("some panic message")
+    0
 }
 
 #[no_mangle]

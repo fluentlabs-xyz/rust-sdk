@@ -6,15 +6,14 @@ struct A {
     uint64 a;
     uint256 b;
 };
-wasmsdk_ABI_STRUCT(A, a, b)
+WASMSDK_ABI_STRUCT(A, a, b)
 
 struct B {
     A a;
 };
-wasmsdk_ABI_STRUCT(B, a)
+WASMSDK_ABI_STRUCT(B, a)
 
 #include <iostream>
-#include <string.h>
 #include <memory>
 
 void crypto_keccak256(void*, int, void*) {
@@ -23,10 +22,10 @@ void crypto_keccak256(void*, int, void*) {
 struct HelloWorld {
     string name;
 };
-wasmsdk_ABI_STRUCT(HelloWorld, name)
+WASMSDK_ABI_STRUCT(HelloWorld, name)
 
-wasmsdk_ABI("helloWorld(HelloWorld)", "void")
-static string erc20_hello_world(HelloWorld helloWorld) {
+WASMSDK_ABI("helloWorld(HelloWorld)", "void")
+static string erc20_hello_world(const HelloWorld& helloWorld) {
     return helloWorld.name;
 }
 
