@@ -3,7 +3,7 @@
 
 #include <wasmsdk/system.h>
 
-wasmsdk_BEGIN_NS
+WASMSDK_BEGIN_NS
 
 void system_halt(HaltCode haltCode) {
     printf("program has halted with code: %d", haltCode);
@@ -33,4 +33,4 @@ void write_event(void*, void*, int) {}
 void crypto_keccak256(void*, int, void*) {
 }
 
-wasmsdk_END_NS
+WASMSDK_END_NS

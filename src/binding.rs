@@ -8,28 +8,28 @@ extern {
     fn _evm_balance(address: *const u8, dest: *mut u8);
     fn _evm_origin(dest: *mut u8);
     fn _evm_caller(dest: *mut u8);
-    fn _evm_call_value(dest: *mut u8);
-    fn _evm_call_data_load(offset: u32, dest: *mut u8);
-    fn _evm_call_data_size(dest: *mut u32);
-    fn _evm_call_data_copy(mem_offset: *mut u8, data_offset: *const u8, length: u32);
-    fn _evm_code_size(dest: *mut u32);
-    fn _evm_code_copy(mem_offset: *mut u8, code_offset: *const u8, length: u32);
-    fn _evm_gas_price(dest: *mut u8);
-    fn _evm_ext_code_size(address: *const u8, dest: *mut u32);
-    fn _evm_ext_code_copy(address: *const u8, mem_offset: *const u8, code_offset: u32, length: u32);
-    fn _evm_ext_code_hash(address: *const u8, dest: *mut u8);
-    fn _evm_return_data_size(dest: *mut u32);
-    fn _evm_return_data_copy(mem_offset: *const u8, data_offset: u32, length: u32);
-    fn _evm_block_hash(num: u64, dest: *mut u8);
+    fn _evm_callvalue(dest: *mut u8);
+    fn _evm_calldataload(offset: u32, dest: *mut u8);
+    fn _evm_calldatasize(dest: *mut u32);
+    fn _evm_calldatacopy(mem_offset: *mut u8, data_offset: *const u8, length: u32);
+    fn _evm_codesize(dest: *mut u32);
+    fn _evm_codecopy(mem_offset: *mut u8, code_offset: *const u8, length: u32);
+    fn _evm_gasprice(dest: *mut u8);
+    fn _evm_extcodesize(address: *const u8, dest: *mut u32);
+    fn _evm_extcodecopy(address: *const u8, mem_offset: *const u8, code_offset: u32, length: u32);
+    fn _evm_extcodehash(address: *const u8, dest: *mut u8);
+    fn _evm_returndatasize(dest: *mut u32);
+    fn _evm_returndatacopy(mem_offset: *const u8, data_offset: u32, length: u32);
+    fn _evm_blockhash(num: u64, dest: *mut u8);
     fn _evm_coinbase(dest: *mut u8);
     fn _evm_timestamp(dest: *mut i64);
     fn _evm_number(dest: *mut u64);
     fn _evm_difficulty(dest: *mut u8);
-    fn _evm_gas_limit(dest: *mut u64);
-    fn _evm_chain_id(dest: *mut u8);
-    fn _evm_base_fee(dest: *mut u8);
-    fn _evm_storage_load(slot: *const u8, dest: *mut u8);
-    fn _evm_storage_store(slot: *const u8, value: *const u8);
+    fn _evm_gaslimit(dest: *mut u64);
+    fn _evm_chainid(dest: *mut u8);
+    fn _evm_basefee(dest: *mut u8);
+    fn _evm_sload(slot: *const u8, dest: *mut u8);
+    fn _evm_sstore(slot: *const u8, value: *const u8);
     fn _evm_log0(data_offset: i32, data_length: u32);
     fn _evm_log1(data_offset: i32, data_length: u32, topic0: *const u8);
     fn _evm_log2(data_offset: i32, data_length: u32, topic0: *const u8, topic1: *const u8);
@@ -37,12 +37,12 @@ extern {
     fn _evm_log4(data_offset: i32, data_length: u32, topic0: *const u8, topic1: *const u8, topic2: *const u8, topic3: *const u8);
     fn _evm_create(value: *const u8, bytecode_offset: *const u8, bytecode_length: u32);
     fn _evm_call(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
-    fn _evm_call_code(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
-    fn _evm_delegate_call(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
+    fn _evm_callcode(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
+    fn _evm_delegatecall(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
     fn _evm_create2(value: *const u8, bytecode_offset: *const u8, bytecode_length: u32, salt: *const u8, dest: *mut u8);
-    fn _evm_static_call(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
+    fn _evm_staticcall(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
     fn _evm_revert(error_offset: *const u8, error_length: u32);
-    fn _evm_self_destruct(beneficiary: *const u8);
+    fn _evm_selfdestruct(beneficiary: *const u8);
 }
 
 #[inline(always)]
@@ -108,7 +108,7 @@ pub fn evm_caller() -> Address {
 pub fn evm_call_value() -> Uint256 {
     let mut bytes: [u8; 32] = [0; 32];
     unsafe {
-        _evm_call_value(bytes.as_mut_ptr())
+        _evm_callvalue(bytes.as_mut_ptr())
     }
     Uint256::from_le_bytes(&bytes)
 }
