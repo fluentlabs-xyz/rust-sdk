@@ -117,7 +117,7 @@ pub fn evm_call_value() -> Uint256 {
 pub fn evm_call_data_load(offset: u32) -> Bytes32 {
     let mut res: Bytes32 = [0; 32];
     unsafe {
-        _evm_call_data_load(offset, res.as_mut_ptr())
+        _evm_calldataload(offset, res.as_mut_ptr())
     }
     res
 }
@@ -126,50 +126,50 @@ pub fn evm_call_data_load(offset: u32) -> Bytes32 {
 pub fn evm_call_data_size() -> u32 {
     let mut res: u32 = 0;
     unsafe {
-        _evm_call_data_size(&mut res as *mut u32)
+        _evm_calldatasize(&mut res as *mut u32)
     }
     res
 }
 
 // pub fn evm_call_data_copy(mem_offset: i32, data_offset: i32, length: u32) {
 //     unsafe {
-//         _evm_call_data_copy(mem_offset, data_offset, length)
+//         _evm_calldatacopy(mem_offset, data_offset, length)
 //     }
 // }
 //
 // pub fn evm_code_size() -> u32 {
 //     unsafe {
-//         _evm_code_size()
+//         _evm_codesize()
 //     }
 // }
 //
 // pub fn evm_code_copy(mem_offset: i32, code_offset: i32, length: u32) {
 //     unsafe {
-//         _evm_code_copy(mem_offset, code_offset, length)
+//         _evm_codecopy(mem_offset, code_offset, length)
 //     }
 // }
 //
 // pub fn evm_gas_price() -> Uint256 {
 //     unsafe {
-//         _evm_gas_price()
+//         _evm_gasprice()
 //     }
 // }
 //
 // pub fn evm_ext_code_size(address: Address) -> u32 {
 //     unsafe {
-//         _evm_ext_code_size(address)
+//         _evm_extcodesize(address)
 //     }
 // }
 //
 // pub fn evm_ext_code_copy(address: Address, mem_offset: i32, code_offset: i32, length: u32) {
 //     unsafe {
-//         _evm_ext_code_copy(address, mem_offset, code_offset, length)
+//         _evm_extcodecopy(address, mem_offset, code_offset, length)
 //     }
 // }
 //
 // pub fn evm_ext_code_hash(address: Address) -> Bytes32 {
 //     unsafe {
-//         _evm_ext_code_hash(address)
+//         _evm_extcodehash(address)
 //     }
 // }
 
@@ -177,7 +177,7 @@ pub fn evm_call_data_size() -> u32 {
 pub fn evm_return_data_size() -> u32 {
     let mut res: u32 = 0;
     unsafe {
-        _evm_return_data_size(&mut res as *mut u32)
+        _evm_returndatasize(&mut res as *mut u32)
     }
     res
 }
@@ -185,7 +185,7 @@ pub fn evm_return_data_size() -> u32 {
 #[inline(always)]
 pub fn evm_return_data_copy(mem_offset: *const u8, data_offset: u32, length: u32) {
     unsafe {
-        _evm_return_data_copy(mem_offset, data_offset, length)
+        _evm_returndatacopy(mem_offset, data_offset, length)
     }
 }
 
@@ -193,7 +193,7 @@ pub fn evm_return_data_copy(mem_offset: *const u8, data_offset: u32, length: u32
 pub fn evm_block_hash(num: u64) -> BlockHash {
     let mut res: BlockHash = [0; 32];
     unsafe {
-        _evm_block_hash(num, res.as_mut_ptr())
+        _evm_blockhash(num, res.as_mut_ptr())
     }
     res
 }
@@ -238,7 +238,7 @@ pub fn evm_difficulty() -> Uint256 {
 pub fn evm_gas_limit() -> u64 {
     let mut res: u64 = 0;
     unsafe {
-        _evm_gas_limit(&mut res as *mut u64)
+        _evm_gaslimit(&mut res as *mut u64)
     }
     res
 }
@@ -247,7 +247,7 @@ pub fn evm_gas_limit() -> u64 {
 pub fn evm_chain_id() -> Uint256 {
     let mut bytes: [u8; 32] = [0; 32];
     unsafe {
-        _evm_chain_id(bytes.as_mut_ptr())
+        _evm_chainid(bytes.as_mut_ptr())
     }
     Uint256::from_le_bytes(&bytes)
 }
@@ -256,7 +256,7 @@ pub fn evm_chain_id() -> Uint256 {
 pub fn evm_base_fee() -> Uint256 {
     let mut bytes: [u8; 32] = [0; 32];
     unsafe {
-        _evm_base_fee(bytes.as_mut_ptr())
+        _evm_basefee(bytes.as_mut_ptr())
     }
     Uint256::from_le_bytes(&bytes)
 }
@@ -265,7 +265,7 @@ pub fn evm_base_fee() -> Uint256 {
 pub fn evm_storage_load(slot: &Bytes32) -> Bytes32 {
     let mut bytes: Bytes32 = [0; 32];
     unsafe {
-        _evm_storage_load(slot.as_ptr(), bytes.as_mut_ptr())
+        _evm_sload(slot.as_ptr(), bytes.as_mut_ptr())
     }
     bytes
 }
@@ -273,7 +273,7 @@ pub fn evm_storage_load(slot: &Bytes32) -> Bytes32 {
 #[inline(always)]
 pub fn evm_storage_store(slot: &Bytes32, value: &Bytes32) {
     unsafe {
-        _evm_storage_store(slot.as_ptr(), value.as_ptr())
+        _evm_sstore(slot.as_ptr(), value.as_ptr())
     }
 }
 
@@ -355,6 +355,6 @@ pub fn evm_revert(error_offset: *const u8, error_length: u32) {
 #[inline(always)]
 pub fn evm_self_destruct(beneficiary: &Address) {
     unsafe {
-        _evm_self_destruct(beneficiary.as_ptr())
+        _evm_selfdestruct(beneficiary.as_ptr())
     }
 }
