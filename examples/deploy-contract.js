@@ -14,11 +14,22 @@ const main = async () => {
     const receipt = await web3.eth.sendSignedTransaction(signedTransaction.rawTransaction);
     console.log(`Receipt: ${JSON.stringify(receipt, null, 2)}`)
     const {contractAddress} = receipt;
+
     const result = await web3.eth.call({
         to: contractAddress,
-    })
+    });
     const message = web3.utils.hexToAscii(result)
     console.log(`Message: "${message}"`)
+
+    const signedTransaction1 = await web3.eth.accounts.signTransaction({
+        to: contractAddress,
+        gas: 10_000_000,
+    }, DEPLOYER_PRIVATE_KEY)
+    const receipt1 = await web3.eth.sendSignedTransaction(signedTransaction1.rawTransaction);
+    console.log(`Receipt: ${JSON.stringify(receipt1, null, 2)}`)
+
+    const latestMinedBlockNumber = await web3.eth.getBlockNumber();
+    console.log(`Latest block number: ${latestMinedBlockNumber}`);
 }
 
 main().then(console.log).catch(console.error);
