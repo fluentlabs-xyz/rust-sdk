@@ -38,9 +38,9 @@ extern {
     fn _evm_create(value: *const u8, bytecode_offset: *const u8, bytecode_length: u32);
     fn _evm_call(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
     fn _evm_callcode(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
-    fn _evm_delegatecall(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
+    fn _evm_delegatecall(gas: u64, address: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
     fn _evm_create2(value: *const u8, bytecode_offset: *const u8, bytecode_length: u32, salt: *const u8, dest: *mut u8);
-    fn _evm_staticcall(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
+    fn _evm_staticcall(gas: u64, address: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
     fn _evm_revert(error_offset: *const u8, error_length: u32);
     fn _evm_selfdestruct(beneficiary: *const u8);
 }
