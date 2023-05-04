@@ -1,9 +1,0 @@
-/llvm
-/sysroot
-/venv
-
-*.wasm
-*.wat
-*.abi
-
-wasi-sdk-19.0

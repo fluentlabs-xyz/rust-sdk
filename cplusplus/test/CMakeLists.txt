@@ -1,6 +1,0 @@
-project(wasmsdk_test)
-file(GLOB_RECURSE TEST_SOURCES ${CMAKE_SOURCE_DIR}/uint256/ *.cpp)
-add_subdirectory(googletest)
-include_directories(googletest/googletest/include)
-add_executable(wasmsdk_test main.cpp ${TEST_SOURCES} system_placeholders.cpp abi/decoding.cpp)
-target_link_libraries(wasmsdk_test gtest wasmsdk)
