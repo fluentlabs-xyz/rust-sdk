@@ -1,6 +1,17 @@
 use crate::types::*;
 
 extern {
+    fn _sys_read(offset: u32, len: u32, target: *mut u8);
+}
+
+#[inline(always)]
+pub fn sys_read_slice(offset: u32, target: &mut [u8]) {
+    unsafe {
+        _sys_read(offset, target.len() as u32, target.as_mut_ptr())
+    }
+}
+
+extern {
     fn _evm_stop();
     fn _evm_return(offset: *const u8, size: u32);
     fn _evm_keccak256(offset: *const u8, size: u32, dest: *mut u8);
@@ -35,7 +46,7 @@ extern {
     fn _evm_log2(data_offset: i32, data_length: u32, topic0: *const u8, topic1: *const u8);
     fn _evm_log3(data_offset: i32, data_length: u32, topic0: *const u8, topic1: *const u8, topic2: *const u8);
     fn _evm_log4(data_offset: i32, data_length: u32, topic0: *const u8, topic1: *const u8, topic2: *const u8, topic3: *const u8);
-    fn _evm_create(value: *const u8, bytecode_offset: *const u8, bytecode_length: u32);
+    fn _evm_create(value: *const u8, bytecode_offset: *const u8, bytecode_length: u32, dest: *mut u8);
     fn _evm_call(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
     fn _evm_callcode(gas: u64, address: *const u8, value: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
     fn _evm_delegatecall(gas: u64, address: *const u8, input_offset: *const u8, input_length: u32, return_offset: *const u8, return_length: u32, dest: *mut bool);
@@ -332,13 +343,15 @@ pub fn evm_log0(data_offset: i32, data_length: u32) {
 //         _evm_delegate_call(gas, address, value, input_offset, input_length, return_offset, return_length)
 //     }
 // }
-//
-// pub fn evm_create2(value: Uint256, bytecode_offset: i32, bytecode_length: u32, salt: Bytes32) -> Address {
-//     unsafe {
-//         _evm_create2(value, bytecode_offset, bytecode_length, salt)
-//     }
-// }
-//
+
+pub fn evm_create2(value: Uint256, bytecode_offset: i32, bytecode_length: u32, salt: Bytes32) -> Address {
+    let mut address: Address = [0; 20];
+    unsafe {
+        _evm_create2(value, bytecode_offset, bytecode_length, salt, address.as_mut_ptr());
+    }
+    address
+}
+
 // pub fn evm_static_call(gas: u64, address: Address, value: Uint256, input_offset: i32, input_length: u32, return_offset: i32, return_length: u32) -> bool {
 //     unsafe {
 //         _evm_static_call(gas, address, value, input_offset, input_length, return_offset, return_length)

@@ -1,90 +1,19 @@
 #![no_std]
 
+extern crate alloc;
+
+use alloc::alloc::alloc;
+use core::alloc::{GlobalAlloc, Layout};
 use wasm0x_zkwasmsdk::*;
-
-const ADDRESS__FUNCTION_FLAG: i32 = 1 << 0;
-const CALLVALUE__FUNCTION_FLAG: i32 = 1 << 1;
-const TIMESTAMP__FUNCTION_FLAG: i32 = 1 << 2;
-const BALANCE__FUNCTION_FLAG: i32 = 1 << 3;
-const CALLER__FUNCTION_FLAG: i32 = 1 << 4;
-const ORIGIN__FUNCTION_FLAG: i32 = 1 << 5;
-const PANICING__FUNCTION_FLAG: i32 = 1 << 6;
-
-fn test_address() -> i32 {
-    let val = evm_address();
-    let mut sum = 0;
-    for b in val {
-        sum += b as i32;
-    }
-    sum
-}
-
-fn test_call_value() -> i32 {
-    let val = evm_call_value();
-    val.bit_length() as i32
-}
-
-fn test_timestamp() -> i32 {
-    let val = evm_timestamp();
-    return val as i32;
-}
-
-fn test_balance() -> i32 {
-    let address: Address = [1; 20];
-    let val = evm_balance(&address);
-    let mut sum = 0;
-    for b in val {
-        sum += b as i32;
-    }
-    sum
-}
-
-fn test_caller() -> i32 {
-    let val = evm_caller();
-    let mut sum = 0;
-    for b in val {
-        sum += b as i32;
-    }
-    sum
-}
-
-fn test_origin() -> i32 {
-    let val = evm_origin();
-    let mut sum = 0;
-    for b in val {
-        sum += b as i32;
-    }
-    sum
-}
-
-fn test_panicing() -> i32 {
-    // panic!("some panic message")
-    0
-}
+use wasm0x_zkwasmsdk::alloc::ALLOC;
 
 #[no_mangle]
 pub extern "C" fn main(input: i32) -> i32 {
-    let mut res = 0;
-    if input & ADDRESS__FUNCTION_FLAG != 0 {
-        res += test_address();
+    let current_address = evm_address();
+    unsafe {
+        let mut layout = Layout::new::<u32>();
+        let ptr = alloc(layout);
+        *(ptr as *mut u32) = input as u32;
     }
-    if input & CALLVALUE__FUNCTION_FLAG != 0 {
-        res += test_call_value();
-    }
-    if input & TIMESTAMP__FUNCTION_FLAG != 0 {
-        res += test_timestamp();
-    }
-    if input & BALANCE__FUNCTION_FLAG != 0 {
-        res += test_balance();
-    }
-    if input & CALLER__FUNCTION_FLAG != 0 {
-        res += test_caller();
-    }
-    if input & ORIGIN__FUNCTION_FLAG != 0 {
-        res += test_origin();
-    }
-    if input & PANICING__FUNCTION_FLAG != 0 {
-        res += test_panicing();
-    }
-    res
+    0
 }
